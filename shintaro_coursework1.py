@@ -103,6 +103,39 @@ def _next_product_id():
         new_id += 1
     return new_id
 
+def loadInventoryFromFile():
+    if not INVENTORY_FILE.exists():
+        return
+    try:
+        data = json.loads(INVENTORY_FILE.read_text(encoding="utf-8"))
+    except json.JSONDecodeError:
+        print("Warning: inventory file is corrupted. Starting empty.")
+        return
+
+    for rec in data:
+        pid = int(rec.get("id", 0))
+        name = str(rec.get("name", "")).strip()
+        if not name or pid <= 0:
+            continue
+        brand_tuple = tuple(rec.get("brand", []))
+        category = str(rec.get("category", ""))
+        quantity = int(rec.get("quantity", 0))
+        price = float(rec.get("price", 0.0))
+
+        if rec.get("type") == "PerishableProduct":
+            exp = str(rec.get("expiration_date", ""))
+            product = PerishableProduct(pid, name, price, quantity, category, brand_tuple, exp)
+        else:
+            product = Product(pid, name, price, quantity, category, brand_tuple)
+
+        inventory[name] = product
+        product_ids.add(pid)
+
+
+def saveInventoryToFile():
+    data = [inventory[name].to_dict() for name in sorted(inventory.keys())]
+    INVENTORY_FILE.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+
 
 def printMenu(menuItems):
     for item in menuItems:
