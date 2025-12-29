@@ -161,6 +161,50 @@ def viewInventory():
     for name in sorted(inventory.keys()):
         print(inventory[name].display())
 
+def updateItem():
+    print("Update Item selected.")
+    product_name = input("Enter product name to update: > ").strip().title()
+    if product_name not in inventory:
+        print("Item not found in inventory.")
+        return False
+    try:
+        change_cat = input("Change category? (y/n): > ").strip().lower()
+        category = _choose_category() if change_cat in {"y", "yes"} else None
+        quantity_text = input("Enter new quantity (blank to keep): > ").strip()
+        price_text = input("Enter new price (blank to keep): > ").strip()
+        quantity = int(quantity_text) if quantity_text != "" else None
+        price = float(price_text) if price_text != "" else None
+    except ValueError:
+        print("Invalid input. Please enter the correct data types.")
+        return False
+
+    if quantity is not None and quantity < 0:
+        print("Quantity must be 0 or higher.")
+        return False
+    if price is not None and price < 0:
+        print("Price must be 0 or higher.")
+        return False
+
+    # brand is intentionally NOT updated (stored as tuple)
+    item = inventory[product_name]
+    item.update(category=category, quantity=quantity, price=price)
+    print("\n")
+    print("Inventory updated successfully!")
+    return True
+
+def removeItem():
+    print("Remove Item selected.")
+    product_name = input("Enter product name to remove: > ").strip().title()
+    print("\n")
+    if product_name in inventory:
+        pid = inventory[product_name].product_id
+        del inventory[product_name]
+        product_ids.discard(pid)
+        print("Item removed successfully.")
+        return True
+    else:
+        print("Item not found in inventory.")
+        return False
 
 print ("Welcome to the Inventory Management System!")
 
