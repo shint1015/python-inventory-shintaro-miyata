@@ -49,3 +49,90 @@ class Product:
             "quantity": self.quantity,
             "price": self.price,
         }
+class PerishableProduct(Product):
+    def __init__(self, product_id, name, price, quantity, category, brand_tuple, expiration_date):
+        super().__init__(product_id, name, price, quantity, category, brand_tuple)
+        self.expiration_date = expiration_date
+
+    def display(self):
+        return f"{super().display()} | Exp: {self.expiration_date}"
+
+    def to_dict(self):
+        d = super().to_dict()
+        d["type"] = "PerishableProduct"
+        d["expiration_date"] = self.expiration_date
+        return d
+
+
+def _choose_category():
+    print("Select a category:")
+    for i, cat in enumerate(CATEGORIES, start=1):
+        print(f"  {i}. {cat}")
+    while True:
+        choice = input("Category number: > ").strip()
+        if not choice.isdigit():
+            print("Please enter a number.")
+            continue
+        idx = int(choice)
+        if 1 <= idx <= len(CATEGORIES):
+            return CATEGORIES[idx - 1]
+        print("Invalid selection.")
+
+
+MAINMENU = (
+    '1. Add Item',
+    '2. View Inventory',
+    '3. Update Item',
+    '4. Remove Item',
+    '5. Exit'
+)
+
+selectedOption = 0
+
+# 1) Basic Setup: inventory as dictionary
+# inventory maps product name -> Product
+inventory = {}
+
+# 3) Sets: track unique product IDs
+product_ids = set()
+
+
+def _next_product_id():
+    new_id = 100 if not product_ids else max(product_ids) + 1
+    while new_id in product_ids:
+        new_id += 1
+    return new_id
+
+
+def printMenu(menuItems):
+    for item in menuItems:
+        print(item)
+
+
+print ("Welcome to the Inventory Management System!")
+
+
+while (selectedOption != 5):
+    print ("=" * 43)
+    printMenu(MAINMENU)
+    try:
+        selectedOption = int(input("Select an option: > "))
+    except ValueError:
+        print("\nInvalid input. Please enter a number corresponding to the menu options.")
+        continue
+    print("\n")
+    if selectedOption == 1:
+        addItem()
+    elif selectedOption == 2:
+        viewInventory()
+    elif selectedOption == 3:
+        updateItem()
+    elif selectedOption == 4:
+        removeItem()
+    elif selectedOption == 5:
+        print("Saving inventory to file...")
+        saveInventoryToFile()
+        print("Exiting system. Goodbye!")
+    else:
+        print("Invalid option. Please select a valid menu option.")
+    print("\n")
