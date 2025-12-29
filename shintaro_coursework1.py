@@ -103,6 +103,7 @@ def _next_product_id():
         new_id += 1
     return new_id
 
+
 def loadInventoryFromFile():
     if not INVENTORY_FILE.exists():
         return
@@ -241,6 +242,8 @@ def removeItem():
 
 print ("Welcome to the Inventory Management System!")
 
+# 7) File Handling: read stored inventory on start
+loadInventoryFromFile()
 
 while (selectedOption != 5):
     print ("=" * 43)
