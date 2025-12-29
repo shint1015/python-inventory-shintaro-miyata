@@ -1,0 +1,47 @@
+[
+  {
+    "type": "PerishableProduct",
+    "id": 103,
+    "name": "Banana",
+    "brand": [
+      "Fruit"
+    ],
+    "category": "Home",
+    "quantity": 20,
+    "price": 3.3,
+    "expiration_date": "2025-12-27"
+  },
+  {
+    "type": "Product",
+    "id": 101,
+    "name": "Notebook",
+    "brand": [
+      "SampleBrand"
+    ],
+    "category": "Office",
+    "quantity": 25,
+    "price": 2.5
+  },
+  {
+    "type": "Product",
+    "id": 102,
+    "name": "Test",
+    "brand": [
+      "Test"
+    ],
+    "category": "Electronics",
+    "quantity": 10,
+    "price": 9.9
+  },
+  {
+    "type": "Product",
+    "id": 100,
+    "name": "USB Cable",
+    "brand": [
+      "SampleBrand"
+    ],
+    "category": "Electronics",
+    "quantity": 10,
+    "price": 6.99
+  }
+]
