@@ -109,6 +109,59 @@ def printMenu(menuItems):
         print(item)
 
 
+def addItem():
+    try:
+        # String methods: strip/title
+        product_name = input("Enter product name: > ").strip().title()
+        category = _choose_category()
+        brand_name = input("Enter brand name (won't change later): > ").strip().title()
+        quantity = int(input("Enter quantity: > ").strip())
+        price = float(input("Enter price: > ").strip())
+    except ValueError:
+        print("Invalid input. Please enter the correct data types.")
+        return None
+
+    if not product_name or not brand_name:
+        print("Name/Brand cannot be empty.")
+        return None
+    if quantity < 0 or price < 0:
+        print("Quantity/Price must be 0 or higher.")
+        return None
+
+    is_perishable = input("Is this perishable? (y/n): > ").strip().lower()
+    exp = ""
+    if is_perishable in {"y", "yes"}:
+        exp = input("Enter expiration date (YYYY-MM-DD): > ").strip()
+        if not exp:
+            print("Expiration date cannot be empty for perishable items.")
+            return None
+
+    pid = _next_product_id()
+    brand_tuple = (brand_name,)
+    if exp:
+        product = PerishableProduct(pid, product_name, price, quantity, category, brand_tuple, exp)
+    else:
+        product = Product(pid, product_name, price, quantity, category, brand_tuple)
+
+    inventory[product_name] = product
+    product_ids.add(pid)
+
+    # 2) formatting
+    print(f"Added: {product_name} (Qty={quantity}, Price=${price:.2f})")
+    print("\n")
+    print("Item added successfully!")
+    return pid
+
+def viewInventory():
+    if not inventory:
+        print("Inventory is empty.")
+        return
+    print("Current Inventory:")
+    print("-" * 20)
+    for name in sorted(inventory.keys()):
+        print(inventory[name].display())
+
+
 print ("Welcome to the Inventory Management System!")
 
 
